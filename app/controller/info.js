@@ -9,8 +9,11 @@ class InfoController extends Controller {
    */
   async config(args, ret) {
     // this._authByToken(args, ret)
-    this.LOG.info(args.uuid, 'configGet', args)
+    this.LOG.info(args.uuid, 'config', args)
 
+    ret.data = {
+      'name': '项目名称'
+    }
     return ret
   }
 
