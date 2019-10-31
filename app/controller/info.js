@@ -22,7 +22,51 @@ class InfoController extends Controller {
    * @param {*} args 
    * @param {*} ret 
    */
-  async pageList(args, ret) {
+  async getDataList(args, ret) {
+    this.LOG.info(args.uuid, 'getDataList', args)
+
+    let category = args.category || 'category'
+    let status = args.status || ''
+    let pid = args.pid || ''
+    let page = args.page || 1
+    let limit = args.limit || 0
+
+    let opts = {}
+    let map = {}
+    map.category = category
+
+    if (status !== '') {
+      map.status = status
+    }
+
+    if (pid !== '') {
+      map.pid = pid
+    }
+
+    if (category === 'document') {
+      let type = args.type || 'article'
+      map.document_type = type
+
+      if (type === 'article' && limit > 0) {
+        opts.offset = (page - 1) * limit
+        opts.limit = limit
+      }
+    }
+    this.LOG.info(args.uuid, 'getDataList map', map)
+
+    let websiteModel = new this.MODELS.websiteModel
+
+    opts.where = map
+    opts.order = [
+      ['sort', 'asc'],
+      ['create_time', 'desc']
+    ]
+    this.LOG.info(args.uuid, 'getDataList opts', opts)
+    let data = await websiteModel.model().findAndCountAll(opts)
+    this.LOG.info(args.uuid, 'getDataList data', data)
+    ret.data = data
+
+    return ret
 
   }
 
@@ -31,27 +75,32 @@ class InfoController extends Controller {
    * @param {*} args 
    * @param {*} ret 
    */
-  async pageDetail(args, ret) {
+  async getDataDetail(args, ret) {
+    this.LOG.info(args.uuid, 'getDataDetail', args)
+    let websiteModel = new this.MODELS.websiteModel
+
+    let id = args.id || 0
+    let url = args.url || ''
+
+    let map = {}
+    if (id) {
+      map.id = id
+    }
+
+    if (url) {
+      map.url = url
+    }
+    this.LOG.info(args.uuid, 'getDataDetail map', map)
+
+    let data = await websiteModel.model().findOne({
+      where: map
+    })
+    this.LOG.info(args.uuid, 'getDataDetail data', data)
+    ret.data = data
+    return ret
 
   }
 
-  /**
-   * 文档列表
-   * @param {*} args 
-   * @param {*} ret 
-   */
-  async docList(args, ret) {
-
-  }
-
-  /**
-   * 文档详情
-   * @param {*} args 
-   * @param {*} ret 
-   */
-  async docDetail(args, ret) {
-
-  }
 
 }
 
