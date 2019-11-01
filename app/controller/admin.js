@@ -1,4 +1,5 @@
 const Controller = require('./../../lib/controller')
+const Op = require('sequelize').Op
 
 class AdminController extends Controller {
 
@@ -44,8 +45,29 @@ class AdminController extends Controller {
     data.post_time = args.post_time || 0
     data.view = args.view || 0
     data.sort = args.sort || 0
-    data.status = args.status || 1
+
+    if (args.hasOwnProperty('status')) {
+      data.status = args.status
+    }
+
     this.LOG.info(args.uuid, 'dataUpdate data', data)
+
+    let find = await websiteModel.model().findOne({
+      where: {
+        id: {
+          [Op.ne]: id
+        },
+        [Op.or]: {
+          title: data.title,
+          name: data.name
+        }
+      }
+    })
+    if (find) {
+      ret.code = 1
+      ret.message = '请不要重复添加'
+      return ret
+    }
 
     let url = '/'
     let category = data.category
@@ -121,6 +143,21 @@ class AdminController extends Controller {
     data.sort = args.sort || 0
     data.status = args.status || 1
     this.LOG.info(args.uuid, 'dataCreate data', data)
+
+    // 判断重复
+    let find = await websiteModel.model().findOne({
+      where: {
+        [Op.or]: {
+          title: data.title,
+          name: data.name
+        }
+      }
+    })
+    if (find) {
+      ret.code = 1
+      ret.message = '请不要重复添加'
+      return ret
+    }
 
     let url = '/'
     let category = data.category

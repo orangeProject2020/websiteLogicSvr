@@ -1,6 +1,7 @@
 // 获取所有方法
 const methods = {
   info: require('./info'),
+  admin: require('./admin')
 }
 
 let METHODS = {}

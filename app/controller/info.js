@@ -1,4 +1,5 @@
 const Controller = require('./../../lib/controller')
+const Op = require('sequelize').Op
 
 class InfoController extends Controller {
 
@@ -37,6 +38,10 @@ class InfoController extends Controller {
 
     if (status !== '') {
       map.status = status
+    } else {
+      map.status = {
+        [Op.gte]: 0
+      }
     }
 
     if (pid !== '') {
