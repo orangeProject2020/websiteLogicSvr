@@ -45,6 +45,11 @@ class AdminController extends Controller {
     data.post_time = args.post_time || 0
     data.view = args.view || 0
     data.sort = args.sort || 0
+    data.url = args.url || ''
+
+    if (args.hasOwnProperty('content')) {
+      data.content = args.content || ''
+    }
 
     if (args.hasOwnProperty('status')) {
       data.status = args.status
@@ -102,7 +107,10 @@ class AdminController extends Controller {
       }
     }
 
-    data.url = url
+    if (!data.url) {
+      data.url = url
+    }
+
     this.LOG.info(args.uuid, 'dataUpdate data', data)
 
     let result = await data.save()
@@ -141,7 +149,14 @@ class AdminController extends Controller {
     data.post_time = args.post_time || 0
     data.view = args.view || 0
     data.sort = args.sort || 0
-    data.status = args.status || 1
+    data.url = args.url || ''
+
+    if (args.hasOwnProperty('status')) {
+      data.status = args.status
+    }
+    if (args.hasOwnProperty('content')) {
+      data.content = args.content || ''
+    }
     this.LOG.info(args.uuid, 'dataCreate data', data)
 
     // 判断重复
@@ -178,7 +193,10 @@ class AdminController extends Controller {
 
     if (category === 'category') {
       url += data.name + '/'
-      data.url = url
+      if (!data.url) {
+        data.url = url
+      }
+
     }
     this.LOG.info(args.uuid, 'dataCreate data', data)
 
@@ -205,7 +223,7 @@ class AdminController extends Controller {
       } else if (documentType === 'url') {
         url = data.url
       }
-      item.url = url
+      item.url = args.url || url
     }
 
     // 更新root_id
