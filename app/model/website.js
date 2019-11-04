@@ -5,7 +5,7 @@ class WebsiteModel extends Model {
 
   model() {
     return this.db().define(
-      'user', {
+      'website', {
         id: {
           type: Sequelize.BIGINT,
           primaryKey: true,
@@ -103,6 +103,14 @@ class WebsiteModel extends Model {
           type: Sequelize.BIGINT(11),
           defaultValue: 0
         },
+        page_limit: {
+          type: Sequelize.BIGINT(11),
+          defaultValue: 0
+        },
+        is_redirect: {
+          type: Sequelize.INTEGER(2),
+          defaultValue: 0
+        }
       }, {
         timestamps: true,
         createdAt: 'create_time',

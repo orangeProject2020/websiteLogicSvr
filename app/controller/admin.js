@@ -46,6 +46,8 @@ class AdminController extends Controller {
     data.view = args.view || 0
     data.sort = args.sort || 0
     data.url = args.url || ''
+    data.page_limit = args.page_limit || 0
+    data.is_redirect = args.is_redirect || 0
 
     if (args.hasOwnProperty('content')) {
       data.content = args.content || ''
@@ -62,6 +64,11 @@ class AdminController extends Controller {
         id: {
           [Op.ne]: id
         },
+        pid: data.pid,
+        status: {
+          [Op.gte]: 0
+        },
+        category: data.category,
         [Op.or]: {
           title: data.title,
           name: data.name
@@ -150,6 +157,8 @@ class AdminController extends Controller {
     data.view = args.view || 0
     data.sort = args.sort || 0
     data.url = args.url || ''
+    data.page_limit = args.page_limit || 0
+    data.is_redirect = args.is_redirect || 0
 
     if (args.hasOwnProperty('status')) {
       data.status = args.status
@@ -165,7 +174,12 @@ class AdminController extends Controller {
         [Op.or]: {
           title: data.title,
           name: data.name
-        }
+        },
+        status: {
+          [Op.gte]: 0
+        },
+        category: data.category,
+        pid: data.pid,
       }
     })
     if (find) {
